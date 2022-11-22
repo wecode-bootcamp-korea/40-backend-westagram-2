@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import { DataSource } from 'typeorm';
 import mysql from 'mysql2';
-import { createPost, createUser } from './controller.js';
+import { createPost, createUser, getPost } from './controller.js';
 
 dotenv.config();
 
@@ -34,6 +34,7 @@ app.get('/ping', (req, res) => {
 
 app.post('/users', createUser);
 app.post('/:id', createPost);
+app.get('/', getPost);
 
 const PORT = process.env.PORT;
 
