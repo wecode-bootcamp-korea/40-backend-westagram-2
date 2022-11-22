@@ -1,9 +1,8 @@
-import express from 'express';
-import cors from 'cors';
-import morgan from 'morgan';
-import dotenv from 'dotenv';
-import { DataSource } from 'typeorm';
-import mysql from 'mysql2';
+const express = require('express');
+const cors = require('cors');
+const morgan = require('morgan');
+const dotenv = require('dotenv');
+const { DataSource } = require('typeorm');
 
 dotenv.config();
 
