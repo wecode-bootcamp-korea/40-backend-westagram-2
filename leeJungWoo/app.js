@@ -4,10 +4,11 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import { DataSource } from 'typeorm';
 import mysql from 'mysql2';
+import { createPost, createUser } from './controller.js';
 
 dotenv.config();
 
-const myDatasource = new DataSource({
+export const myDatasource = new DataSource({
   type: process.env.TYPEORM_CONNECTION,
   host: process.env.TYPEORM_HOST,
   port: process.env.TYPEORM_PORT,
@@ -31,23 +32,8 @@ app.get('/ping', (req, res) => {
   res.status(200).json({ message: 'pong' });
 });
 
-app.post('/users', async (req, res, next) => {
-  const { name, email, profile_image, password } = req.body;
-  try {
-    await myDatasource.query(
-      `INSERT INTO users(
-      name,
-      email,
-      profile_image,
-      password
-    ) VALUES (?, ?, ?, ?);`,
-      [name, email, profile_image, password]
-    );
-    res.status(201).json({ message: 'user_created!' });
-  } catch {
-    res.status(400).json({ message: 'check your name, email, password ' });
-  }
-});
+app.post('/users', createUser);
+app.post('/:id', createPost);
 
 const PORT = process.env.PORT;
 
