@@ -81,10 +81,28 @@ function getPostById(req, res, next) {
       res.status(500).json({ message: 'sry something went wrong..' });
     });
 }
+
+async function editPostContent(req, res, next) {
+  const { content } = req.body;
+  const id = req.params.id;
+  const finished = await myDataSource.query(
+    `UPDATE posts SET content = "${content}" WHERE posts.id = ${id}`
+  );
+  if (finished) {
+    myDataSource
+      .query(
+        `SELECT u.id as userId, u.name as userName, p.id as postingId, p.title as postingTitle, p.content as postingContent FROM users u INNER JOIN posts p ON p.user_id = u.id WHERE p.id = ${id}`
+      )
+      .then((row) => {
+        res.status(201).json(row);
+      });
+  }
+}
 module.exports = {
   createUser,
   createPost,
   getPost,
   myDataSource: myDataSource,
   getPostById,
+  editPostContent,
 };

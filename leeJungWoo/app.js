@@ -8,6 +8,7 @@ const {
   getPost,
   myDataSource,
   getPostById,
+  editPostContent,
 } = require('./controller.js');
 
 dotenv.config();
@@ -27,9 +28,10 @@ app.get('/ping', (req, res) => {
 });
 
 app.post('/users', createUser);
-app.post('/:id', createPost);
+app.post('/posts/:id', createPost);
 app.get('/', getPost);
 app.get('/:id', getPostById);
+app.patch('/posts/:id', editPostContent);
 
 const PORT = process.env.PORT;
 
