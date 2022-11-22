@@ -33,7 +33,6 @@ app.get('/ping', (req, res) => {
 
 app.post('/users', async (req, res, next) => {
   const { name, email, profile_image, password } = req.body;
-  const isExist = [name, email, password].length;
   try {
     await myDatasource.query(
       `INSERT INTO users(
