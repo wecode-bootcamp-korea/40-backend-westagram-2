@@ -24,12 +24,10 @@ function createUser(req, res, next) {
     ) VALUES (?, ?, ?, ?);`,
       [name, email, profile_image, password]
     )
-    .then(() => {
-      res.status(201).json({ message: 'user_created!' });
-    })
-    .catch(() => {
-      res.status(400).json({ message: 'check your name, email, password ' });
-    });
+    .then(() => res.status(201).json({ message: 'user_created!' }))
+    .catch(() =>
+      res.status(400).json({ message: 'check your name, email, password ' })
+    );
 }
 
 function createPost(req, res, next) {
@@ -45,12 +43,8 @@ function createPost(req, res, next) {
       ) VALUES (?, ?, ?, ?)`,
       [title, content, id, postImage]
     )
-    .then(() => {
-      res.status(201).json({ message: 'postCreated!' });
-    })
-    .catch(() => {
-      res.status(400).json({ message: 'check ur title, content' });
-    });
+    .then(() => res.status(201).json({ message: 'postCreated!' }))
+    .catch(() => res.status(400).json({ message: 'check ur title, content' }));
 }
 
 function getPost(req, res, next) {
@@ -58,12 +52,8 @@ function getPost(req, res, next) {
     .query(
       `SELECT p.user_id as userId, u.profile_image as userProfileImage, p.id as postingId, p.post_image as postingImageUrl, p.content as postingContent from posts p inner join users u on p.user_id = u.id`
     )
-    .then((row) => {
-      res.status(200).json(row);
-    })
-    .catch(() => {
-      res.status(500).json({ message: 'sry something went wrong' });
-    });
+    .then((row) => res.status(200).json(row))
+    .catch(() => res.status(500).json({ message: 'sry something went wrong' }));
 }
 
 function getPostById(req, res, next) {
@@ -73,9 +63,7 @@ function getPostById(req, res, next) {
       `
   SELECT u.id as userId, u.profile_image as userProfileImage, JSON_ARRAYAGG(JSON_OBJECT('postingId', p.id, 'postingImageUrl', p.post_image, 'postingContent', p.content)) as postings FROM users u INNER JOIN posts p ON p.user_id = u.id WHERE u.id = ${id} GROUP BY u.id`
     )
-    .then((row) => {
-      res.status(200).json(row);
-    })
+    .then((row) => res.status(200).json(row))
     .catch((err) => {
       console.log(err);
       res.status(500).json({ message: 'sry something went wrong..' });
@@ -93,11 +81,17 @@ async function editPostContent(req, res, next) {
       .query(
         `SELECT u.id as userId, u.name as userName, p.id as postingId, p.title as postingTitle, p.content as postingContent FROM users u INNER JOIN posts p ON p.user_id = u.id WHERE p.id = ${id}`
       )
-      .then((row) => {
-        res.status(201).json(row);
-      });
+      .then((row) => res.status(201).json(row));
   }
 }
+
+function deletePost(req, res, next) {
+  const id = req.params.id;
+  myDataSource
+    .query(`DELETE FROM posts WHERE posts.id = ${id}`)
+    .then(() => res.status(200).json({ message: 'post deleted!' }));
+}
+
 module.exports = {
   createUser,
   createPost,
@@ -105,4 +99,5 @@ module.exports = {
   myDataSource: myDataSource,
   getPostById,
   editPostContent,
+  deletePost,
 };

@@ -9,6 +9,7 @@ const {
   myDataSource,
   getPostById,
   editPostContent,
+  deletePost,
 } = require('./controller.js');
 
 dotenv.config();
@@ -32,6 +33,7 @@ app.post('/posts/:id', createPost);
 app.get('/', getPost);
 app.get('/:id', getPostById);
 app.patch('/posts/:id', editPostContent);
+app.delete('/posts/:id', deletePost);
 
 const PORT = process.env.PORT;
 
