@@ -7,6 +7,7 @@ const {
   createUser,
   getPost,
   myDataSource,
+  getPostById,
 } = require('./controller.js');
 
 dotenv.config();
@@ -28,6 +29,7 @@ app.get('/ping', (req, res) => {
 app.post('/users', createUser);
 app.post('/:id', createPost);
 app.get('/', getPost);
+app.get('/:id', getPostById);
 
 const PORT = process.env.PORT;
 

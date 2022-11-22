@@ -66,9 +66,25 @@ function getPost(req, res, next) {
     });
 }
 
+function getPostById(req, res, next) {
+  const id = req.params.id;
+  myDataSource
+    .query(
+      `
+  SELECT u.id as userId, u.profile_image as userProfileImage, JSON_ARRAYAGG(JSON_OBJECT('postingId', p.id, 'postingImageUrl', p.post_image, 'postingContent', p.content)) as postings FROM users u INNER JOIN posts p ON p.user_id = u.id WHERE u.id = ${id} GROUP BY u.id`
+    )
+    .then((row) => {
+      res.status(200).json(row);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ message: 'sry something went wrong..' });
+    });
+}
 module.exports = {
   createUser,
   createPost,
   getPost,
   myDataSource: myDataSource,
+  getPostById,
 };
