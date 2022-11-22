@@ -33,18 +33,21 @@ app.get('/ping', (req, res) => {
 
 app.post('/users', async (req, res, next) => {
   const { name, email, profile_image, password } = req.body;
-
-  await myDatasource.query(
-    `INSERT INTO users(
+  const isExist = [name, email, password].length;
+  try {
+    await myDatasource.query(
+      `INSERT INTO users(
       name,
       email,
       profile_image,
       password
     ) VALUES (?, ?, ?, ?);`,
-    [name, email, profile_image, password]
-  );
-
-  res.status(201).json({ message: 'user_created!' });
+      [name, email, profile_image, password]
+    );
+    res.status(201).json({ message: 'user_created!' });
+  } catch {
+    res.status(400).json({ message: 'check your name, email, password ' });
+  }
 });
 
 const PORT = process.env.PORT;
