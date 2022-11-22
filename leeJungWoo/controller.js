@@ -1,9 +1,21 @@
-import { myDatasource } from './app.js';
+const { DataSource } = require('typeorm');
+const dotenv = require('dotenv');
 
-export async function createUser(req, res, next) {
+dotenv.config();
+
+const myDataSource = new DataSource({
+  type: process.env.TYPEORM_CONNECTION,
+  host: process.env.TYPEORM_HOST,
+  port: process.env.TYPEORM_PORT,
+  username: process.env.TYPEORM_USERNAME,
+  password: process.env.TYPEORM_PASSWORD,
+  database: process.env.TYPEORM_DATABASE,
+});
+
+function createUser(req, res, next) {
   const { name, email, profile_image, password } = req.body;
-  try {
-    await myDatasource.query(
+  myDataSource
+    .query(
       `INSERT INTO users(
       name,
       email,
@@ -11,18 +23,20 @@ export async function createUser(req, res, next) {
       password
     ) VALUES (?, ?, ?, ?);`,
       [name, email, profile_image, password]
-    );
-    res.status(201).json({ message: 'user_created!' });
-  } catch {
-    res.status(400).json({ message: 'check your name, email, password ' });
-  }
+    )
+    .then(() => {
+      res.status(201).json({ message: 'user_created!' });
+    })
+    .catch(() => {
+      res.status(400).json({ message: 'check your name, email, password ' });
+    });
 }
 
-export async function createPost(req, res, next) {
+function createPost(req, res, next) {
   const { title, content, postImage } = req.body;
   const id = req.params.id;
-  try {
-    await myDatasource.query(
+  myDataSource
+    .query(
       `INSERT INTO posts(
         title,
         content,
@@ -30,22 +44,31 @@ export async function createPost(req, res, next) {
         post_image
       ) VALUES (?, ?, ?, ?)`,
       [title, content, id, postImage]
-    );
-    res.status(201).json({ message: 'postCreated!' });
-  } catch {
-    res.status(400).json({ message: 'check ur title, content' });
-  }
+    )
+    .then(() => {
+      res.status(201).json({ message: 'postCreated!' });
+    })
+    .catch(() => {
+      res.status(400).json({ message: 'check ur title, content' });
+    });
 }
 
-export async function getPost(req, res, next) {
-  try {
-    const data = await myDatasource.query(
-      `SELECT p.user_id as userId, u.profile_image as userProfileImage, p.id as postingId, p.post_image as postingImageUrl, p.content as postingContent from posts p inner join users u on p.user_id = u.id`,
-      (err, rows) => {
-        res.status(200).json(rows);
-      }
-    );
-  } catch {
-    res.status(500).json({ message: 'sry something went wrong' });
-  }
+function getPost(req, res, next) {
+  myDataSource
+    .query(
+      `SELECT p.user_id as userId, u.profile_image as userProfileImage, p.id as postingId, p.post_image as postingImageUrl, p.content as postingContent from posts p inner join users u on p.user_id = u.id`
+    )
+    .then((row) => {
+      res.status(200).json(row);
+    })
+    .catch(() => {
+      res.status(500).json({ message: 'sry something went wrong' });
+    });
 }
+
+module.exports = {
+  createUser,
+  createPost,
+  getPost,
+  myDataSource: myDataSource,
+};

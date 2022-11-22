@@ -1,26 +1,19 @@
-import express from 'express';
-import cors from 'cors';
-import morgan from 'morgan';
-import dotenv from 'dotenv';
-import { DataSource } from 'typeorm';
-import mysql from 'mysql2';
-import { createPost, createUser, getPost } from './controller.js';
+const express = require('express');
+const cors = require('cors');
+const morgan = require('morgan');
+const dotenv = require('dotenv');
+const {
+  createPost,
+  createUser,
+  getPost,
+  myDataSource,
+} = require('./controller.js');
 
 dotenv.config();
 
-export const myDatasource = new DataSource({
-  type: process.env.TYPEORM_CONNECTION,
-  host: process.env.TYPEORM_HOST,
-  port: process.env.TYPEORM_PORT,
-  username: process.env.TYPEORM_USERNAME,
-  password: process.env.TYPEORM_PASSWORD,
-  database: process.env.TYPEORM_DATABASE,
+myDataSource.initialize().then(() => {
+  console.log('connected!');
 });
-myDatasource
-  .initialize() //
-  .then(() => {
-    console.log('connected!');
-  });
 
 const app = express();
 
@@ -49,3 +42,4 @@ const start = async () => {
 };
 
 start();
+exports.myDataSource = myDataSource;
