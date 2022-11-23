@@ -85,8 +85,14 @@ async function editPostContent(req, res, next) {
   }
 }
 
-function deletePost(req, res, next) {
+async function deletePost(req, res, next) {
   const id = req.params.id;
+  const isExist = await myDataSource.query(
+    `SELECT * FROM likes WHERE likes.post_id = ${id}`
+  );
+  if (isExist) {
+    await myDataSource.query(`DELETE FROM likes WHERE likes.post_id = ${id}`);
+  }
   myDataSource
     .query(`DELETE FROM posts WHERE posts.id = ${id}`)
     .then(() => res.status(200).json({ message: 'post deleted!' }));
