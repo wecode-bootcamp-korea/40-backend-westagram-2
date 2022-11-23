@@ -92,6 +92,18 @@ function deletePost(req, res, next) {
     .then(() => res.status(200).json({ message: 'post deleted!' }));
 }
 
+function increaseLike(req, res, next) {
+  const id = req.params.id;
+  const user = req.query.user;
+  myDataSource
+    .query(
+      `INSERT INTO likes(user_id, post_id) VALUES ((SELECT users.id FROM users WHERE users.id = ${user}), (SELECT posts.id FROM posts WHERE posts.id = ${id}))`
+    )
+    .then(() => {
+      res.status(200).json({ message: 'likeCreated!' });
+    });
+}
+
 module.exports = {
   createUser,
   createPost,
@@ -100,4 +112,5 @@ module.exports = {
   getPostById,
   editPostContent,
   deletePost,
+  increaseLike,
 };

@@ -10,6 +10,7 @@ const {
   getPostById,
   editPostContent,
   deletePost,
+  increaseLike,
 } = require('./controller.js');
 
 dotenv.config();
@@ -29,12 +30,12 @@ app.get('/ping', (req, res) => {
 });
 
 app.post('/users', createUser);
-app.post('/posts/:id', createPost);
+app.post('/users/:id', createPost);
 app.get('/', getPost);
 app.get('/:id', getPostById);
 app.patch('/posts/:id', editPostContent);
 app.delete('/posts/:id', deletePost);
-
+app.post('/posts/:id', increaseLike);
 const PORT = process.env.PORT;
 
 const start = async () => {
