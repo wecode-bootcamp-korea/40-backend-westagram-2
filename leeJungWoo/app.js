@@ -14,7 +14,7 @@ const mysqlDatasource = new DataSource({
   password: process.env.TYPEORM_PASSWORD,
   database: process.env.TYPEORM_DATABASE,
 });
-myDatasource
+mysqlDatasource
   .initialize() //
   .then(() => {
     console.log('connected!');
