@@ -36,6 +36,10 @@ app.get('/:id', getPostById);
 app.patch('/posts/:id', editPostContent);
 app.delete('/posts/:id', deletePost);
 app.post('/posts/:id', increaseLike);
+
+app.use((req, res, next) => {
+  res.status(404).json({ message: 'something went wrong' });
+});
 const PORT = process.env.PORT;
 
 const start = async () => {
