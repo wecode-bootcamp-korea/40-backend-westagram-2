@@ -28,11 +28,27 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan('combined'));
 
+app.post("/users", async (req, res, next) => {
+	const { name, email, profile_image, password } = req.body
+    
+	await myDataSource.query(
+		`INSERT INTO users(
+      name, 
+      email,
+      profile_image,
+      password
+		) VALUES (?, ?, ?, ?);
+		`,
+		[ name, email, profile_image, password ]
+	); 
+     res.status(201).json({ message : "successfully created" });
+})
+
 const server = http.createServer(app)
 const PORT = process.env.PORT;
 
 const start = async () => {
-          server.listen(PORT, () => console.log(`server is listening on ${PORT}`)
+  server.listen(PORT, () => console.log(`server is listening on ${PORT}`)
 )}
 
 start()
