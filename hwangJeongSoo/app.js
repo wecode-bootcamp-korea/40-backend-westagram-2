@@ -22,22 +22,48 @@ myDataSource.initialize()
         console.log("Data Source has been initialized")
     })
 
-app = express()
+const app = express();
 
 app.use(express.json())
 app.use(cors())
 app.use(morgan('dev'))
 
-
-
 app.get("/ping", (req, res) =>{
-	res.json({ message : "pong"});
+	res.status(201).json({ message : "pong"});
     });
+//CRUD
+app.post("/signup", async(req, res, next)=>{
+    const { id, name, email, profile_image, password } = req.body
+
+
+await myDataSource.query(
+    `INSERT INTO users(
+        id,
+        name,
+        email,
+        profile_image,
+        password
+    ) VALUES (?, ?, ?, ?, ?);
+    `,
+    [ id, name, email, profile_image, password ]
+); 
+     res.status(201).json({ message : "successfully created"});
+    })
+
+
+
+
+
 
 const server = http.createServer(app)
 const PORT = process.env.PORT;
 
 const start = async () => {
-	server.listen(PORT, () => console.log(`server is listening on ${PORT}`))}
+	try{ 
+        server.listen(PORT, () => console.log(`server is listening on ${PORT}`));
+}   catch (err) {
+    console.error(err);
+}
+};
 
 start()
