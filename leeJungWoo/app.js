@@ -6,7 +6,7 @@ const {
   createPost,
   createUser,
   getPost,
-  myDataSource,
+  database,
   getPostById,
   editPostContent,
   deletePost,
@@ -15,7 +15,7 @@ const {
 
 dotenv.config();
 
-myDataSource.initialize().then(() => {
+database.initialize().then(() => {
   console.log('connected!');
 });
 
@@ -53,4 +53,3 @@ const start = async () => {
 };
 
 start();
-exports.myDataSource = myDataSource;
