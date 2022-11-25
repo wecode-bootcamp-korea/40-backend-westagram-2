@@ -8,7 +8,8 @@ CREATE TABLE
         password VARCHAR(200) NOT NULL,
         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
-        PRIMARY KEY (id)
+        PRIMARY KEY (id),
+        UNIQUE (email)
     );
 
 -- migrate:down
