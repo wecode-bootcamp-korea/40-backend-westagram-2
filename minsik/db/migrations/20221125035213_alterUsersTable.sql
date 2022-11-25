@@ -1,6 +1,6 @@
 -- migrate:up
 ALTER TABLE users 
-    ADD CONSTRAINT email UNIQUE (email);
+    ADD CONSTRAINT users_email_ukey UNIQUE (email);
 
 -- migrate:down
 
