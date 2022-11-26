@@ -1,3 +1,6 @@
+/node
+.env
+schema.sql
 # Created by https://www.toptal.com/developers/gitignore/api/linux,macos,webstorm,node,visualstudiocode,windows,dotenv
 # Edit at https://www.toptal.com/developers/gitignore?templates=linux,macos,webstorm,node,visualstudiocode,windows,dotenv
 
@@ -350,3 +353,28 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/linux,macos,webstorm,node,visualstudiocode,windows,dotenv
+
+# Created by https://www.toptal.com/developers/gitignore/api/scheme
+# Edit at https://www.toptal.com/developers/gitignore?templates=scheme
+
+
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+.idea
+
+### Scheme ###
+*.ss~
+*.ss#*
+.#*.ss
+
+*.scm~
+*.scm#*
+.#*.scm
+
+# End of https://www.toptal.com/developers/gitignore/api/scheme

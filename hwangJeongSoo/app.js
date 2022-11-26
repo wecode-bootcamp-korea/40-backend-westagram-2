@@ -31,12 +31,11 @@ app.get("/ping", (req, res) =>{
     });
 
 
-//2. signup
 app.post("/signup", async(req, res, next)=>{
     const { name, email, profile_image, password } = req.body
 
 
-await myDataSource.query(
+await appDataSource.query(
     `INSERT INTO users(
         name,
         email,
@@ -48,34 +47,6 @@ await myDataSource.query(
 ); 
      res.status(201).json({ message : "successfully created"});
     })
-
-
-//3. post 게시글 등록   api2
-app.post("/posts", async(req, res, next)=>{
-    const { title, content, user_id } = req.body
-
-
-await myDataSource.query(
-    `INSERT INTO posts(
-        title,
-        content,
-        user_id
-    ) VALUES (?, ?, ?);
-    `,
-    [ title, content, user_id]
-); 
-     res.status(201).json({ message : "postCreated"});
-    })
-
-
-//4. get전체 게시글 조회   api6
-
-//5. get.use유저의 게시글 조회 api6
-//6. 게시글 수정 ap4
-//7. 게시글 삭제 api5
-//8. 좋아요 누르기 api
-
-
 
 const server = http.createServer(app)
 const PORT = process.env.PORT;
