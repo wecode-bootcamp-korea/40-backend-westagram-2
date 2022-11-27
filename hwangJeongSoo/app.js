@@ -30,7 +30,6 @@ app.get("/ping", (req, res) =>{
 	res.status(201).json({ message : "pong"});
 });
 
-//↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓2.회원가입하기 : 완료
 app.post("/signup", async(req, res, next)=>{
     const { name, email, profile_image, password } = req.body
 
