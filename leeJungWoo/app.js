@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
+const bcrypt = require('bcrypt');
 const { DataSource } = require('typeorm');
 
 dotenv.config();
@@ -32,6 +33,7 @@ app.get('/ping', (req, res) => {
 
 app.post('/users', async (req, res, next) => {
   const { name, email, profile_image, password } = req.body;
+  const hashed = await bcrypt.hash(password, 10);
   try {
     await database.query(
       `INSERT INTO users(
@@ -40,7 +42,7 @@ app.post('/users', async (req, res, next) => {
       profile_image,
       password
     ) VALUES (?, ?, ?, ?);`,
-      [name, email, profile_image, password]
+      [name, email, profile_image, hashed]
     );
     res.status(201).json({ message: 'user_created!' });
   } catch {
