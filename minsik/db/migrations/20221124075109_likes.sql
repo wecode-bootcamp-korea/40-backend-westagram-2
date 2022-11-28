@@ -1,5 +1,5 @@
 -- migrate:up
-CREATE TABLE IF NOT EXISTS likes (
+CREATE TABLE likes (
     id INT NOT NULL AUTO_INCREMENT,
     likes_user INT NOT NULL,
     likes_post INT NOT NULL,
