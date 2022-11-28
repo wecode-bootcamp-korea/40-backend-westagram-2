@@ -83,26 +83,30 @@ app.get('/posts', async(req, res, next) => {
 });  
 
 
-app.get('/user_posts', async(req, res, next) => {
-    const { id } = req.body;
-    await appDataSource.query(
-    `SELECT users.id as userID, users.profile_image as userProfileImage,  
+app.get('/user_posts', async (req,res) => {
+    const {id} = req.body;
     
-    JSON_OBJECTAGG(
-    'PostingID', posts.id, 
-    'postingImageUrl', posts.image_url, 
-    'PostingContent',posts.content
-    ) as postings   
-    FROM posts
-    INNER JOIN users
-    ON users.id = ${id}
-    GROUP BY users.id`,
+    const user = await appDataSource.query(
+      `SELECT
+        users.id as userId,
+        users.profile_image as userProfileImage
+      FROM users
+      WHERE users.id = ${id};`,
+    );
+    const post = await appDataSource.query(
+      `SELECT
+        posts.id as postingId,
+        posts.title as postingImageUrl,
+        posts.content as postingContent
+      FROM posts
+      WHERE posts.user_id = ${id};`,
+    );
+    user[0].posting = post;
+    const result = user[0];
+    res.status(200).json({data:result})
+  })
 
-     function(err ,rows) {
-        res.status(200).json({data: rows});
-    }
-    )
-});
+
 
 app.patch('/put', async(req, res) => {
     const { content, id } = req.body;
