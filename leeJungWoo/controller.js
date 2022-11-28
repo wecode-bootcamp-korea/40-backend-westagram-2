@@ -1,6 +1,7 @@
 const { DataSource } = require('typeorm');
 const dotenv = require('dotenv');
-
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 dotenv.config();
 
 const database = new DataSource({
@@ -12,8 +13,9 @@ const database = new DataSource({
   database: process.env.TYPEORM_DATABASE,
 });
 
-const createUser = (req, res, next) => {
+const createUser = async (req, res, next) => {
   const { name, email, profile_image, password } = req.body;
+  const hashed = await bcrypt.hash(password, 10);
   database
     .query(
       `INSERT INTO users(
@@ -22,7 +24,7 @@ const createUser = (req, res, next) => {
       profile_image,
       password
     ) VALUES (?, ?, ?, ?);`,
-      [name, email, profile_image, password]
+      [name, email, profile_image, hashed]
     )
     .then(() => res.status(201).json({ message: 'user_created!' }))
     .catch((err) => res.status(400).json({ message: err.message }));
@@ -141,6 +143,22 @@ const increaseLike = (req, res, next) => {
     });
 };
 
+const login = async (req, res, next) => {
+  const { id, password } = req.body;
+  const user = await database.query(
+    `SELECT * FROM users u WHERE u.email = '${id}'`
+  );
+  if (user.length === 0) {
+    return res.status(404).json({ message: 'Invalid User' });
+  }
+  const verified = await bcrypt.compare(password, user[0].password);
+  if (!verified) {
+    return res.status(400).json({ message: 'Invalid User' });
+  }
+  const token = jwt.sign({ id: user[0].id }, process.env.COOKIE_SECRET);
+  return res.status(200).json({ accessToken: token });
+};
+
 module.exports = {
   createUser,
   createPost,
@@ -150,4 +168,5 @@ module.exports = {
   editPostContent,
   deletePost,
   increaseLike,
+  login,
 };

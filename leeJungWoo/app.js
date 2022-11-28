@@ -2,16 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
-const {
-  createPost,
-  createUser,
-  getPost,
-  database,
-  getPostById,
-  editPostContent,
-  deletePost,
-  increaseLike,
-} = require('./controller.js');
+const homeRouter = require('./router/home.js');
+const postRouter = require('./router/post.js');
+const { database } = require('./controller.js');
 
 dotenv.config();
 
@@ -29,13 +22,9 @@ app.get('/ping', (req, res) => {
   res.status(200).json({ message: 'pong' });
 });
 
-app.post('/users', createUser);
-app.post('/users/:id', createPost);
-app.get('/', getPost);
-app.get('/:id', getPostById);
-app.patch('/posts/:id', editPostContent);
-app.delete('/posts/:id', deletePost);
-app.post('/posts/:id', increaseLike);
+app.use('/', homeRouter);
+
+app.use('/posts', postRouter);
 
 app.use((req, res, next) => {
   res.status(404).json({ message: 'something went wrong' });
