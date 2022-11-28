@@ -12,7 +12,7 @@ const database = new DataSource({
   database: process.env.TYPEORM_DATABASE,
 });
 
-function createUser(req, res, next) {
+const createUser = (req, res, next) => {
   const { name, email, profile_image, password } = req.body;
   database
     .query(
@@ -25,12 +25,10 @@ function createUser(req, res, next) {
       [name, email, profile_image, password]
     )
     .then(() => res.status(201).json({ message: 'user_created!' }))
-    .catch(() =>
-      res.status(400).json({ message: 'check your name, email, password ' })
-    );
-}
+    .catch((err) => res.status(400).json({ message: err.message }));
+};
 
-function createPost(req, res, next) {
+const createPost = (req, res, next) => {
   const { title, content, postImage } = req.body;
   const id = req.params.id;
   database
@@ -44,48 +42,76 @@ function createPost(req, res, next) {
       [title, content, id, postImage]
     )
     .then(() => res.status(201).json({ message: 'postCreated!' }))
-    .catch(() => res.status(400).json({ message: 'check ur title, content' }));
-}
+    .catch((err) => res.status(400).json({ message: err.message }));
+};
 
-function getPost(req, res, next) {
+const getPost = (req, res, next) => {
   database
     .query(
-      `SELECT p.user_id as userId, u.profile_image as userProfileImage, p.id as postingId, p.post_image as postingImageUrl, p.content as postingContent from posts p inner join users u on p.user_id = u.id`
+      `SELECT
+      p.user_id as userId, 
+      u.profile_image as userProfileImage, 
+      p.id as postingId, 
+      p.post_image as postingImageUrl, 
+      p.content as postingContent 
+      FROM posts p 
+      INNER JOIN users u 
+      ON p.user_id = u.id`
     )
     .then((row) => res.status(200).json(row))
-    .catch(() => res.status(500).json({ message: 'sry something went wrong' }));
-}
+    .catch((err) => res.status(500).json({ message: err.message }));
+};
 
-function getPostById(req, res, next) {
+const getPostById = (req, res, next) => {
   const id = req.params.id;
   database
     .query(
       `
-  SELECT u.id as userId, u.profile_image as userProfileImage, JSON_ARRAYAGG(JSON_OBJECT('postingId', p.id, 'postingImageUrl', p.post_image, 'postingContent', p.content)) as postings FROM users u LEFT JOIN posts p ON p.user_id = u.id WHERE u.id = ${id} GROUP BY u.id`
+  SELECT 
+  u.id as userId, 
+  u.profile_image as userProfileImage, 
+  JSON_ARRAYAGG(
+    JSON_OBJECT('postingId', p.id, 'postingImageUrl', p.post_image, 'postingContent', p.content)
+    ) as postings 
+    FROM users u 
+    LEFT JOIN posts p 
+    ON p.user_id = u.id 
+    WHERE u.id = ${id} GROUP BY u.id`
     )
     .then((row) => res.status(200).json(row))
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({ message: 'sry something went wrong..' });
-    });
-}
+    .catch((err) => res.status(500).json({ message: err.message }));
+};
 
-async function editPostContent(req, res, next) {
+const editPostContent = async (req, res, next) => {
   const { content } = req.body;
   const id = req.params.id;
   const finished = await database.query(
-    `UPDATE posts SET content = "${content}" WHERE posts.id = ${id}`
+    `UPDATE posts 
+    SET content = "${content}" 
+    WHERE posts.id = ${id}`
   );
   if (finished) {
     database
       .query(
-        `SELECT u.id as userId, u.name as userName, p.id as postingId, p.title as postingTitle, p.content as postingContent FROM users u INNER JOIN posts p ON p.user_id = u.id WHERE p.id = ${id}`
+        `SELECT
+        u.id as userId, 
+        u.name as userName, 
+        p.id as postingId, 
+        p.title as postingTitle, 
+        p.content as postingContent 
+        FROM users u 
+        INNER JOIN posts p 
+        ON p.user_id = u.id 
+        WHERE p.id = ${id}`
       )
-      .then((row) => res.status(201).json(row));
+      .then((row) => res.status(201).json(row))
+      .catch((err) =>
+        res.status(err.statusCode || 500).json({ message: err.message })
+      );
   }
-}
+};
 
-async function deletePost(req, res, next) {
+const deletePost = async (req, res, next) => {
   const id = req.params.id;
   const isExist = await database.query(
     `SELECT * FROM likes WHERE likes.post_id = ${id}`
@@ -96,19 +122,24 @@ async function deletePost(req, res, next) {
   database
     .query(`DELETE FROM posts WHERE posts.id = ${id}`)
     .then(() => res.status(200).json({ message: 'post deleted!' }));
-}
+};
 
-function increaseLike(req, res, next) {
+const increaseLike = (req, res, next) => {
   const id = req.params.id;
   const user = req.query.user;
   database
     .query(
-      `INSERT INTO likes(user_id, post_id) VALUES ((SELECT users.id FROM users WHERE users.id = ${user}), (SELECT posts.id FROM posts WHERE posts.id = ${id}))`
+      `INSERT INTO 
+      likes (user_id, post_id) 
+      VALUES (
+        (SELECT users.id FROM users WHERE users.id = ${user}), 
+        (SELECT posts.id FROM posts WHERE posts.id = ${id})
+        )`
     )
     .then(() => {
       res.status(200).json({ message: 'likeCreated!' });
     });
-}
+};
 
 module.exports = {
   createUser,
