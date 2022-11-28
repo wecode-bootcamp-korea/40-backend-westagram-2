@@ -378,3 +378,5 @@ Thumbs.db
 .#*.scm
 
 # End of https://www.toptal.com/developers/gitignore/api/scheme
+
+db/schema.sql

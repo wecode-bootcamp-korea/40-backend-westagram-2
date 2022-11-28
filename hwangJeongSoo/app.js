@@ -72,8 +72,7 @@ app.get('/posts', async(req, res, next) => {
         p.content as postingContent
         FROM users as u 
         RIGHT JOIN posts as p
-        ON p.id = u.id
-                
+        ON p.id = u.id                
     ;`,
 
         (err ,rows) => {
