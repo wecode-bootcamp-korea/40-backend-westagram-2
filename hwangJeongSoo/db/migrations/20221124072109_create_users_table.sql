@@ -9,7 +9,7 @@ CREATE TABLE
         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id),
-        UNIQUE (email)
+        CONSTRAINT users_email_ukey UNIQUE (email)
     );
 
 -- migrate:down
