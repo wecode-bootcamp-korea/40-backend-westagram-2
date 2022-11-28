@@ -1,7 +1,6 @@
 const http = require("http");
 const express = require("express");
 const cors = require("cors");
-//const morgan = require("morgan");
 const dotenv = require("dotenv");
 
 dotenv.config();
@@ -10,12 +9,11 @@ app = express();
 
 app.use(express.json());
 app.use(cors());
-//app.use(morgan('tiny'));
 
 const server = http.createServer(app);
 const PORT = process.env.PORT;
 
-const { DataSource, SimpleConsoleLogger } = require('typeorm');
+const { DataSource } = require('typeorm');
 
 const appDataSource = new DataSource({
     type : process.env.TYPEORM_CONNECTION,
