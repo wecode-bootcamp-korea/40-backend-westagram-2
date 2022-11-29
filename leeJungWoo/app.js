@@ -4,13 +4,8 @@ const morgan = require('morgan');
 const dotenv = require('dotenv');
 const homeRouter = require('./router/home.js');
 const postRouter = require('./router/post.js');
-const { database } = require('./controller.js');
 
 dotenv.config();
-
-database.initialize().then(() => {
-  console.log('connected!');
-});
 
 const app = express();
 

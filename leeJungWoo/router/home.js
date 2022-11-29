@@ -2,10 +2,11 @@ const express = require('express');
 const {
   getPost,
   getPostById,
-  createUser,
-  createPost,
   login,
-} = require('../controller.js');
+  signUp,
+  uploadPost,
+} = require('../controller/controller.js');
+const { validation } = require('../middleware/validation.js');
 
 const router = express.Router();
 
@@ -13,9 +14,9 @@ router.get('/', getPost);
 
 router.get('/:id', getPostById);
 
-router.post('/join', createUser);
+router.post('/join', signUp);
 
-router.post('/', createPost);
+router.post('/', validation, uploadPost);
 
 router.post('/login', login);
 

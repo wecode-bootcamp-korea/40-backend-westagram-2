@@ -1,16 +1,17 @@
 const express = require('express');
 const {
-  editPostContent,
-  deletePost,
   increaseLike,
-} = require('../controller.js');
+  updatePostContent,
+  deletePostById,
+} = require('../controller/controller.js');
+const { validation, isAvailable } = require('../middleware/validation.js');
 
 const router = express.Router();
 
-router.patch('/:id', editPostContent);
+router.patch('/:id', validation, isAvailable, updatePostContent);
 
-router.delete('/:id', deletePost);
+router.delete('/:id', validation, isAvailable, deletePostById);
 
-router.post('/:id', increaseLike);
+router.post('/:id', validation, increaseLike);
 
 module.exports = router;
