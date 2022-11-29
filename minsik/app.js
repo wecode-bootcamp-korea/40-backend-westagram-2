@@ -51,8 +51,6 @@ const hashedPassword = await bcrypt.hash(password, 12);
     res.status(201).json({ message : "userCreated" });
 });
 
-<<<<<<< HEAD
-
 // Login bcrypt verification
 app.post("/login", async (req, res, next) => {
     const { email, password } = req.body
@@ -77,8 +75,6 @@ app.post("/login", async (req, res, next) => {
         res.status(500).json({ message : "Error" })
     }
 })
-=======
->>>>>>> 50960ab5e1a9a2e14c1deb6e2d5f97746bc1152e
 // Create New Post
 app.post("/addPost", async (req, res, next) => {
     const { title, content, userId } = req.body
@@ -101,8 +97,8 @@ app.post("/newLike", async (req, res) => {
 
     await appDataSource.query(
         `INSERT INTO likes(
-            likes_user,
-            likes_post
+            user_id,
+            post_id
         ) VALUES ( ${userId}, ${postId} )
     `
     );
