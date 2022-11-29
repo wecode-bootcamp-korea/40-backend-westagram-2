@@ -16,6 +16,7 @@ const server = http.createServer(app);
 const PORT = process.env.PORT;
 
 const { DataSource } = require('typeorm');
+const e = require("express");
 
 const appDataSource = new DataSource({
     type : process.env.TYPEORM_CONNECTION,
@@ -53,50 +54,28 @@ const hashedPassword = await bcrypt.hash(password, 12);
 
 // Login bcrypt verification
 app.post("/login", async (req, res, next) => {
-    const { username, password } = req.body
-    //
-    let hashedPassword = await appDataSource.query(
-        `SELECT
-                password
-            FROM 
-                users
-            WHERE
-                name = "${username}"
-        `
+    const { email, password } = req.body
+    
+    const hash2 = await appDataSource.query(
+        `SELECT password FROM users WHERE email = "${email}"`
     )
-    
-    //const checkHash = await bcrypt.compare(password, hashedPassword)
 
-    console.log(hashedPassword)
-
+    const payLoad = { 
+        email : email
     }
-)
-
     
-
-    //
-
-    // if (user == null) {
-    //     return res.status(400).send('Cannot find user')
-    // }
-    // try {
-    //     if (await bcrypt.compare(req.body.password, user.password)) {
-    //         res.send('Success')
-    //     } else {
-    //         res.send('Not Allowed')
-    //     }
-    // } catch { 
-    //     res.status(500).send()
-    // }
-    
-    // const payLoad = { 
-    //                     name : username,
-    //                     password : password
-    //                 }
-
-    // const accessToken = jwt.sign(payLoad, process.env.ACCESS_TOKEN_SECRET)
-    // res.json({ accessToken : accessToken })
-
+    const verified = await bcrypt.compare(password, hash2[0].password)
+    try {
+        if (verified) {
+            const accessToken = jwt.sign(payLoad, process.env.ACCESS_TOKEN_SECRET)
+            res.json({ acessToken : accessToken })
+        } else {
+            res.json({ message : 'Invalid User' })
+        }
+    } catch {
+        res.status(500).json({ message : "Error" })
+    }
+})
 // Create New Post
 app.post("/addPost", async (req, res, next) => {
     const { title, content, userId } = req.body
