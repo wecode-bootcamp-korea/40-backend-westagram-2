@@ -51,6 +51,7 @@ const hashedPassword = await bcrypt.hash(password, 12);
     res.status(201).json({ message : "userCreated" });
 });
 
+
 // Login bcrypt verification
 app.post("/login", async (req, res, next) => {
     const { email, password } = req.body
@@ -75,6 +76,7 @@ app.post("/login", async (req, res, next) => {
         res.status(500).json({ message : "Error" })
     }
 })
+
 // Create New Post
 app.post("/addPost", async (req, res, next) => {
     const { title, content, userId } = req.body
