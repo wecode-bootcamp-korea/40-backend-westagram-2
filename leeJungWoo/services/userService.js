@@ -1,4 +1,4 @@
-const { createUser, getPostByPostId } = require('../models/userDao.js');
+const { createUser } = require('../models/userDao.js');
 
 const signUpValidation = async (name, email, password, profile_image) => {
   const pwValidation = new RegExp(

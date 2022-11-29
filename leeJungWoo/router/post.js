@@ -1,9 +1,10 @@
 const express = require('express');
 const {
-  increaseLike,
   updatePostContent,
   deletePostById,
-} = require('../controller/controller.js');
+  increaseLike,
+} = require('../controller/postController.js');
+
 const { validation, isAvailable } = require('../middleware/validation.js');
 
 const router = express.Router();

@@ -2,8 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
-const homeRouter = require('./router/home.js');
-const postRouter = require('./router/post.js');
+const routes = require('./router');
 
 dotenv.config();
 
@@ -17,13 +16,12 @@ app.get('/ping', (req, res) => {
   res.status(200).json({ message: 'pong' });
 });
 
-app.use('/', homeRouter);
-
-app.use('/posts', postRouter);
+app.use(routes);
 
 app.use((req, res, next) => {
   res.status(404).json({ message: 'something went wrong' });
 });
+
 const PORT = process.env.PORT;
 
 const start = async () => {

@@ -2,10 +2,10 @@ const express = require('express');
 const {
   getPost,
   getPostById,
-  login,
-  signUp,
   uploadPost,
-} = require('../controller/controller.js');
+} = require('../controller/postController.js');
+const { signUp, login } = require('../controller/userController.js');
+
 const { validation } = require('../middleware/validation.js');
 
 const router = express.Router();

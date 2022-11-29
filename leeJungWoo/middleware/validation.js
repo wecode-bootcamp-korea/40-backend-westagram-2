@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
-const { getPostByPostId } = require('../models/userDao.js');
+const { getPostByPostId } = require('../models/postDao.js');
 
 dotenv.config();
 
