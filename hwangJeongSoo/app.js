@@ -47,7 +47,7 @@ app.post("/signup", async (req, res, next) => {
 `,
     [name, email, profile_image, hashed_Password]
   );
-  res.status(201).json({ message: "successfully created" });
+  res.status(201).json({ message: "userCreated" });
 });
 
 const server = http.createServer(app);
