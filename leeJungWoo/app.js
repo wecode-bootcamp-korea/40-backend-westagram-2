@@ -33,7 +33,7 @@ app.get('/ping', (req, res) => {
 
 app.post('/users', async (req, res, next) => {
   const { name, email, profile_image, password } = req.body;
-  const hashed = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(password, 10);
   try {
     await database.query(
       `INSERT INTO users(
@@ -42,7 +42,7 @@ app.post('/users', async (req, res, next) => {
       profile_image,
       password
     ) VALUES (?, ?, ?, ?);`,
-      [name, email, profile_image, hashed]
+      [name, email, profile_image, hashedPassword]
     );
     res.status(201).json({ message: 'user_created!' });
   } catch {
