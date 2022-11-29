@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken')
 
 dotenv.config();
 
@@ -34,13 +35,7 @@ appDataSource.initialize()
 app.post("/signup", async (req, res, next) => {
     const { name, email, profileImage, password } = req.body
 
-const saltRounds = 12;
-
-const makeHash = async ( password, saltRounds ) => {
-    return await bcrypt.hash(password, saltRounds);
-}
-
-const hashedPassword = await makeHash(password, saltRounds);
+const hashedPassword = await bcrypt.hash(password, 12);
 
     await appDataSource.query(
         `INSERT INTO users(
@@ -54,6 +49,53 @@ const hashedPassword = await makeHash(password, saltRounds);
     );
     res.status(201).json({ message : "userCreated" });
 });
+
+
+// Login bcrypt verification
+app.post("/login", async (req, res, next) => {
+    const { username, password } = req.body
+    //
+    let hashedPassword = await appDataSource.query(
+        `SELECT
+                password
+            FROM 
+                users
+            WHERE
+                name = "${username}"
+        `
+    )
+    
+    //const checkHash = await bcrypt.compare(password, hashedPassword)
+
+    console.log(hashedPassword)
+
+    }
+)
+
+    
+
+    //
+
+    // if (user == null) {
+    //     return res.status(400).send('Cannot find user')
+    // }
+    // try {
+    //     if (await bcrypt.compare(req.body.password, user.password)) {
+    //         res.send('Success')
+    //     } else {
+    //         res.send('Not Allowed')
+    //     }
+    // } catch { 
+    //     res.status(500).send()
+    // }
+    
+    // const payLoad = { 
+    //                     name : username,
+    //                     password : password
+    //                 }
+
+    // const accessToken = jwt.sign(payLoad, process.env.ACCESS_TOKEN_SECRET)
+    // res.json({ accessToken : accessToken })
 
 // Create New Post
 app.post("/addPost", async (req, res, next) => {
