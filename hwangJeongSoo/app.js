@@ -18,7 +18,7 @@ const appDataSource = new DataSource({
 });
 
 appDataSource.initialize().then(() => {
-  console.log("Data Source has been initialized");
+  console.log("Data Source has been initialized!");
 });
 
 const app = express();
