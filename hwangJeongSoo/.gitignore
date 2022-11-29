@@ -1,6 +1,7 @@
 /node
 .env
 schema.sql
+db/schema.sql
 # Created by https://www.toptal.com/developers/gitignore/api/linux,macos,webstorm,node,visualstudiocode,windows,dotenv
 # Edit at https://www.toptal.com/developers/gitignore?templates=linux,macos,webstorm,node,visualstudiocode,windows,dotenv
 
@@ -379,4 +380,3 @@ Thumbs.db
 
 # End of https://www.toptal.com/developers/gitignore/api/scheme
 
-db/schema.sql

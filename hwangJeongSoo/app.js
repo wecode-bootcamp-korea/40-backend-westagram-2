@@ -6,6 +6,8 @@ const cors = require("cors");
 const morgan = require("morgan");
 const { DataSource, SimpleConsoleLogger } = require("typeorm");
 
+const bcrypt = require("bcrypt");
+
 const appDataSource = new DataSource({
   type: process.env.TYPEORM_CONNECTION,
   host: process.env.TYPEORM_HOST,
@@ -32,6 +34,9 @@ app.get("/ping", (req, res) => {
 app.post("/signup", async (req, res, next) => {
   const { name, email, profile_image, password } = req.body;
 
+  const salt_Rounds = 10;
+  const hashed_Password = await bcrypt.hash(password, salt_Rounds);
+
   await appDataSource.query(
     `INSERT INTO users(
       name,
@@ -40,7 +45,7 @@ app.post("/signup", async (req, res, next) => {
       password
     ) VALUES (?, ?, ?, ?);
 `,
-    [name, email, profile_image, password]
+    [name, email, profile_image, hashed_Password]
   );
   res.status(201).json({ message: "successfully created" });
 });
