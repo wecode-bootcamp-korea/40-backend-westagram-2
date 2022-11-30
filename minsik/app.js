@@ -16,8 +16,6 @@ const server = http.createServer(app);
 const PORT = process.env.PORT;
 
 const { DataSource } = require('typeorm');
-const e = require("express");
-const { token } = require("morgan");
 
 const appDataSource = new DataSource({
     type : process.env.TYPEORM_CONNECTION,
@@ -37,7 +35,7 @@ appDataSource.initialize()
 app.post("/signup", async (req, res, next) => {
     const { name, email, profileImage, password } = req.body
 
-const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
     await appDataSource.query(
         `INSERT INTO users(
@@ -56,7 +54,7 @@ const hashedPassword = await bcrypt.hash(password, 12);
 app.post("/login", async (req, res, next) => {
     const { email, password } = req.body
     
-    const hash2 = await appDataSource.query(
+    const digest = await appDataSource.query(
         `SELECT password FROM users WHERE email = "${email}"`
     )
 
@@ -64,20 +62,18 @@ app.post("/login", async (req, res, next) => {
         email : email
     }
     
-    const verified = await bcrypt.compare(password, hash2[0].password)
+    const verified = await bcrypt.compare(password, digest[0].password)
     try {
         if (verified) {
             const accessToken = jwt.sign(payLoad, process.env.ACCESS_TOKEN_SECRET);
             res.json({ acessToken : accessToken })
-        } else {
-            res.json({ message : 'Invalid Request' })
         }
-    } catch {
-        res.status(500).json({ message : "Error" })
+    } catch (err) {
+        res.status(500).json({ message : "Failed to verify user" })
     }
 })
 
-// VERIFY JWT
+// VERIFY JWT (Middleware)
 const verifyToken = (req, res, next) => {
     try {
         let authHeader = req.headers['authorization'];
@@ -107,7 +103,7 @@ app.post("/addPost", verifyToken, async (req, res, next) => {
             res.status(201).json({ message : "postCreated" });
         } 
     } catch (err) {
-        res.status(403).json({ message : "Invalid Access Token" });
+        res.status(403).json({ message : "Failed to Post" });
     }
    
     
