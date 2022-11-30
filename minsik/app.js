@@ -50,6 +50,7 @@ app.post("/signup", async (req, res, next) => {
     res.status(201).json({ message : "userCreated" });
 });
 
+
 // Login bcrypt verification
 app.post("/login", async (req, res, next) => {
     const { email, password } = req.body
