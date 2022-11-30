@@ -8,7 +8,7 @@ const {
   getPostByUserId,
 } = require('../controller/postController.js');
 const { authorization } = require('../middleware/auth.js');
-const { checkPostOwner } = require('../middleware/checkPostOwner.js');
+const { checkPostOwner } = require('../services/postService.js');
 
 const router = express.Router();
 
