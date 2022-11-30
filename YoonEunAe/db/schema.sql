@@ -40,10 +40,11 @@ CREATE TABLE `posts` (
   `user_id` int NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `image_url` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `posts_user_id_fkey` (`user_id`),
   CONSTRAINT `posts_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -73,7 +74,7 @@ CREATE TABLE `users` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,5 +100,6 @@ LOCK TABLES `schema_migrations` WRITE;
 INSERT INTO `schema_migrations` (version) VALUES
   ('20221124054911'),
   ('20221124055015'),
-  ('20221124055042');
+  ('20221124055042'),
+  ('20221127105451');
 UNLOCK TABLES;
