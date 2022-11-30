@@ -17,6 +17,7 @@ const PORT = process.env.PORT;
 
 const { DataSource } = require('typeorm');
 const e = require("express");
+const { token } = require("morgan");
 
 const appDataSource = new DataSource({
     type : process.env.TYPEORM_CONNECTION,
@@ -66,29 +67,50 @@ app.post("/login", async (req, res, next) => {
     const verified = await bcrypt.compare(password, hash2[0].password)
     try {
         if (verified) {
-            const accessToken = jwt.sign(payLoad, process.env.ACCESS_TOKEN_SECRET)
+            const accessToken = jwt.sign(payLoad, process.env.ACCESS_TOKEN_SECRET);
             res.json({ acessToken : accessToken })
         } else {
-            res.json({ message : 'Invalid User' })
+            res.json({ message : 'Invalid Request' })
         }
     } catch {
         res.status(500).json({ message : "Error" })
     }
 })
-// Create New Post
-app.post("/addPost", async (req, res, next) => {
-    const { title, content, userId } = req.body
 
-    await appDataSource.query(
-        `INSERT INTO posts(
-            title,
-            content,
-            user_id    
-        ) VALUES ( ?, ?, ? )
-        `,
-        [ title, content, userId ]
-    );
-    res.status(201).json({ message : "postCreated" });
+// VERIFY JWT
+const verifyToken = (req, res, next) => {
+    try {
+        let authHeader = req.headers['authorization'];
+        let token = authHeader.split(' ')[1]
+        req.token = token;
+        next();
+    } catch (err) {
+        res.status(401).json({ message : "Invalid Access Token" })
+    }
+}
+
+// Create New Post
+app.post("/addPost", verifyToken, async (req, res, next) => {
+    const { title, content, userId } = req.body
+    try{
+        let verified = jwt.verify(req.token, process.env.ACCESS_TOKEN_SECRET);
+        if (verified) {
+            await appDataSource.query(
+                `INSERT INTO posts(
+                    title,
+                    content,
+                    user_id    
+                ) VALUES ( ?, ?, ? )
+                `,
+                [ title, content, userId ]
+            );
+            res.status(201).json({ message : "postCreated" });
+        } 
+    } catch (err) {
+        res.status(403).json({ message : "Invalid Access Token" });
+    }
+   
+    
 });
 
 // Create New Like
