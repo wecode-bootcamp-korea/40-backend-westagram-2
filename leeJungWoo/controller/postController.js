@@ -1,11 +1,11 @@
 const {
   createPost,
   getAllPost,
-  getAllPostById,
   patchContent,
   getPostByPostId,
   deletePostByPostId,
   increasePostLikes,
+  getAllPostByUserId,
 } = require('../models/postDao.js');
 
 const uploadPost = async (req, res, next) => {
@@ -31,10 +31,10 @@ const getPost = async (req, res, next) => {
   }
 };
 
-const getPostById = async (req, res, next) => {
+const getPostByUserId = async (req, res, next) => {
   const id = req.params.id;
   try {
-    const data = await getAllPostById(id);
+    const data = await getAllPostByUserId(id);
     return res.status(200).json(data);
   } catch (err) {
     return res.status(err.statusCode || 500).json(err.message);
@@ -80,7 +80,7 @@ const increaseLike = async (req, res, next) => {
 
 module.exports = {
   getPost,
-  getPostById,
+  getPostByUserId,
   updatePostContent,
   deletePostById,
   increaseLike,

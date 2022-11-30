@@ -3,16 +3,25 @@ const {
   updatePostContent,
   deletePostById,
   increaseLike,
+  uploadPost,
+  getPost,
+  getPostByUserId,
 } = require('../controller/postController.js');
-
-const { validation, isAvailable } = require('../middleware/validation.js');
+const { authorization } = require('../middleware/auth.js');
+const { checkPostOwner } = require('../middleware/checkPostOwner.js');
 
 const router = express.Router();
 
-router.patch('/:id', validation, isAvailable, updatePostContent);
+router.patch('/:id', authorization, checkPostOwner, updatePostContent);
 
-router.delete('/:id', validation, isAvailable, deletePostById);
+router.delete('/:id', authorization, checkPostOwner, deletePostById);
 
-router.post('/:id', validation, increaseLike);
+router.post('/:id', authorization, increaseLike);
+
+router.post('/', authorization, uploadPost);
+
+router.get('/', getPost);
+
+router.get('/:id', getPostByUserId);
 
 module.exports = router;
