@@ -2,77 +2,22 @@ const http = require("http");
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const bcrypt = require("bcrypt");
-const jwt = require('jsonwebtoken')
 
 dotenv.config();
 
-app = express();
+const routes = require("./routes");
+const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use(routes);
 
 const server = http.createServer(app);
 const PORT = process.env.PORT;
 
-const { DataSource } = require('typeorm');
-
-const appDataSource = new DataSource({
-    type : process.env.TYPEORM_CONNECTION,
-    host : process.env.TYPEORM_HOST,
-    port : process.env.TYPEORM_PORT,
-    username : process.env.TYPEORM_USERNAME,
-    password : process.env.TYPEORM_PASSWORD,
-    database : process.env.TYPEORM_DATABASE
+app.get("/ping", (req, res) => {
+    res.json({ message: "pong" });
 });
-
-appDataSource.initialize()
-    .then(() => {
-        console.log("Data Source has been initialized!")
-    });
-
-// Create New User
-app.post("/signup", async (req, res, next) => {
-    const { name, email, profileImage, password } = req.body
-
-    const hashedPassword = await bcrypt.hash(password, 12);
-
-    await appDataSource.query(
-        `INSERT INTO users(
-            name,
-            email,
-            profile_image,
-            password            
-        ) VALUES ( ?, ?, ?, ? )
-        `,
-        [ name, email, profileImage, hashedPassword ]
-    );
-    res.status(201).json({ message : "userCreated" });
-});
-
-
-// Login bcrypt verification
-app.post("/login", async (req, res, next) => {
-    const { email, password } = req.body
-    
-    const digest = await appDataSource.query(
-        `SELECT password FROM users WHERE email = "${email}"`
-    )
-
-    const payLoad = { 
-        email : email
-    }
-    
-    const verified = await bcrypt.compare(password, digest[0].password)
-    try {
-        if (verified) {
-            const accessToken = jwt.sign(payLoad, process.env.ACCESS_TOKEN_SECRET);
-            res.json({ acessToken : accessToken })
-        }
-    } catch (err) {
-        res.status(500).json({ message : "Failed to verify user" })
-    }
-})
 
 // VERIFY JWT (Middleware)
 const verifyToken = (req, res, next) => {
