@@ -1,9 +1,11 @@
-node_modules/
+/node
 .env
-db/schema.sql
+schema.sql
+# Created by https://www.toptal.com/developers/gitignore/api/linux,macos,webstorm,node,visualstudiocode,windows,dotenv
+# Edit at https://www.toptal.com/developers/gitignore?templates=linux,macos,webstorm,node,visualstudiocode,windows,dotenv
 
-# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,vim,webstorm,macos,linux,windows,zsh,node
-# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,vim,webstorm,macos,linux,windows,zsh,node
+### dotenv ###
+.env
 
 ### Linux ###
 *~
@@ -129,7 +131,6 @@ web_modules/
 .yarn-integrity
 
 # dotenv environment variable files
-.env
 .env.development.local
 .env.test.local
 .env.production.local
@@ -192,26 +193,6 @@ dist
 
 # SvelteKit build / generate output
 .svelte-kit
-
-### Vim ###
-# Swap
-[._]*.s[a-v][a-z]
-!*.svg  # comment out if you don't need vector files
-[._]*.sw[a-p]
-[._]s[a-rt-v][a-z]
-[._]ss[a-gi-z]
-[._]sw[a-p]
-
-# Session
-Session.vim
-Sessionx.vim
-
-# Temporary
-.netrwhist
-# Auto-generated tag files
-tags
-# Persistent undo
-[._]*.un~
 
 ### VisualStudioCode ###
 .vscode/*
@@ -351,7 +332,7 @@ Thumbs.db
 Thumbs.db:encryptable
 ehthumbs.db
 ehthumbs_vista.db
-
+    
 # Dump file
 *.stackdump
 
@@ -371,35 +352,31 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-### Zsh ###
-# Zsh compiled script + zrecompile backup
-*.zwc
-*.zwc.old
+# End of https://www.toptal.com/developers/gitignore/api/linux,macos,webstorm,node,visualstudiocode,windows,dotenv
 
-# Zsh completion-optimization dumpfile
-*zcompdump*
-
-# Zsh zcalc history
-.zcalc_history
-
-# A popular plugin manager's files
-._zinit
-.zinit_lstupd
-
-# zdharma/zshelldoc tool's files
-zsdoc/data
-
-# robbyrussell/oh-my-zsh/plugins/per-directory-history plugin's files
-# (when set-up to store the history in the local directory)
-.directory_history
-
-# MichaelAquilina/zsh-autoswitch-virtualenv plugin's files
-# (for Zsh plugins using Python)
-.venv
-
-# Zunit tests' output
-/tests/_output/*
-!/tests/_output/.gitkeep
+# Created by https://www.toptal.com/developers/gitignore/api/scheme
+# Edit at https://www.toptal.com/developers/gitignore?templates=scheme
 
 
-# End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,vim,webstorm,macos,linux,windows,zsh,node
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+.idea
+
+### Scheme ###
+*.ss~
+*.ss#*
+.#*.ss
+
+*.scm~
+*.scm#*
+.#*.scm
+
+# End of https://www.toptal.com/developers/gitignore/api/scheme
+
+db/schema.sql
