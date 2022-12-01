@@ -2,24 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
-const bcrypt = require('bcrypt');
-const { DataSource } = require('typeorm');
+
+const routes = require('./router');
 
 dotenv.config();
 
-const database = new DataSource({
-  type: process.env.TYPEORM_CONNECTION,
-  host: process.env.TYPEORM_HOST,
-  port: process.env.TYPEORM_PORT,
-  username: process.env.TYPEORM_USERNAME,
-  password: process.env.TYPEORM_PASSWORD,
-  database: process.env.TYPEORM_DATABASE,
-});
-database
-  .initialize() //
-  .then(() => {
-    console.log('connected!');
-  });
 
 const app = express();
 
@@ -31,23 +18,12 @@ app.get('/ping', (req, res) => {
   res.status(200).json({ message: 'pong' });
 });
 
-app.post('/users', async (req, res, next) => {
-  const { name, email, profile_image, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
-  try {
-    await database.query(
-      `INSERT INTO users(
-      name,
-      email,
-      profile_image,
-      password
-    ) VALUES (?, ?, ?, ?);`,
-      [name, email, profile_image, hashedPassword]
-    );
-    res.status(201).json({ message: 'user_created!' });
-  } catch {
-    res.status(400).json({ message: 'check your name, email, password ' });
-  }
+
+app.use(routes);
+
+app.use((req, res, next) => {
+  res.status(404).json({ message: 'something went wrong' });
+
 });
 
 const PORT = process.env.PORT;
