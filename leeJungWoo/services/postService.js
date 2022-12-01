@@ -1,18 +1,17 @@
 const { getPostByPostId } = require('../models/postDao');
 
-const checkPostOwner = async (req, res, next) => {
-  const postId = req.params.id;
-  const userId = req.data;
+const checkPostOwner = async (userId, postId) => {
   try {
     const data = await getPostByPostId(postId);
     if (userId === data[0].userId) {
-      next();
+      return true;
     } else {
-      throw new Error();
+      const error = new Error('NOT_ALLOWED');
+      error.statusCode = 400;
+      throw error;
     }
   } catch (err) {
-    console.log(err);
-    return res.status(403).json({ message: 'NOT_AVAILABLE' });
+    throw err;
   }
 };
 

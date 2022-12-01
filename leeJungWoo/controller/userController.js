@@ -20,9 +20,9 @@ const signUp = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
-  const { id, password } = req.body;
+  const { email, password } = req.body;
   try {
-    const user = await loginUser(id);
+    const user = await loginUser(email);
     if (user.length === 0) {
       return res.status(404).json({ message: 'INVALID_USER' });
     }

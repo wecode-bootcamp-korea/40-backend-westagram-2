@@ -37,10 +37,10 @@ const createUser = async (name, email, password, profile_image) => {
   }
 };
 
-const loginUser = async (id) => {
+const loginUser = async (email) => {
   try {
     return await database.query(
-      `SELECT * FROM users u WHERE u.email = '${id}'`
+      `SELECT * FROM users u WHERE u.email = '${email}'`
     );
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');

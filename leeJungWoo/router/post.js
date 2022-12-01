@@ -8,13 +8,12 @@ const {
   getPostByUserId,
 } = require('../controller/postController.js');
 const { authorization } = require('../middleware/auth.js');
-const { checkPostOwner } = require('../services/postService.js');
 
 const router = express.Router();
 
-router.patch('/:id', authorization, checkPostOwner, updatePostContent);
+router.patch('/:id', authorization, updatePostContent);
 
-router.delete('/:id', authorization, checkPostOwner, deletePostById);
+router.delete('/:id', authorization, deletePostById);
 
 router.post('/:id', authorization, increaseLike);
 
